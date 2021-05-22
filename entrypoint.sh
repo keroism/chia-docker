@@ -7,6 +7,14 @@ chia init
 if [[ ${keys} == "generate" ]]; then
   echo "to use your own keys pass them as a text file -v /path/to/keyfile:/path/in/container and -e keys=\"/path/in/container\""
   chia keys generate
+elif [[ ${keys} == 'tmp_ca' ]]; then
+  if [[ ! "$(ls -A /root/.chia/tmp_ca)" ]]; then
+    echo "no temp CA files found in /root/.chia/tmp_ca, assuming already configured"
+  else 
+    chia init -c /root/.chia/tmp_ca
+    echo "now deleting temp ca"
+    rm -rf /root/.chia/tmp_ca
+  fi
 else
   chia keys add -f ${keys}
 fi
@@ -27,6 +35,9 @@ elif [[ ${harvester} == 'true' ]]; then
     exit
   else
     chia configure --set-farmer-peer ${farmer_address}:${farmer_port}
+    chia configure --set-log-level=INFO
+    chia configure --enable-upnp=false
+    python add_havester_mounts.py
     chia start harvester
   fi
 else

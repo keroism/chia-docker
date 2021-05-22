@@ -4,6 +4,7 @@ EXPOSE 8555
 EXPOSE 8444
 
 ENV keys="generate"
+ENV tmp_ca_path="/tmp_ca_path"
 ENV harvester="false"
 ENV farmer="false"
 ENV plots_dir="/plots"
@@ -23,7 +24,10 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && /usr/bin/sh ./install.sh
 
 WORKDIR /chia-blockchain
-RUN mkdir /plots
+RUN mkdir /plots \
+&& mkdir /plots1 /plots2 /plots3 /plots4 /plots5 /plots6 /plots7 
+ADD ./add_havester_mounts.py add_havester_mounts.py
 ADD ./entrypoint.sh entrypoint.sh
+
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]
