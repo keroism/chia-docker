@@ -14,7 +14,7 @@ ENV testnet="false"
 ENV full_node_port="null"
 ARG BRANCH
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y curl jq python3 ansible tar bash ca-certificates git openssl unzip wget python3-pip sudo acl build-essential python3-dev python3.8-venv python3.8-distutils apt nfs-common python-is-python3 vim
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl jq python3 ansible tar bash ca-certificates git openssl unzip wget python3-pip sudo acl build-essential python3-dev python3.8-venv python3.8-distutils apt nfs-common python-is-python3 vim tzdata
 
 RUN echo "cloning ${BRANCH}"
 RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain.git \
@@ -24,9 +24,11 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && /usr/bin/sh ./install.sh
 
 WORKDIR /chia-blockchain
+
 RUN mkdir /plots \
 && mkdir /plots1 /plots2 /plots3 /plots4 /plots5 /plots6 /plots7 
 ADD ./add_havester_mounts.py add_havester_mounts.py
+
 ADD ./entrypoint.sh entrypoint.sh
 
 
